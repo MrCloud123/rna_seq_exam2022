@@ -10,7 +10,7 @@ library(stats)
 sampleNames <- c("SRR7821949","SRR7821950","SRR7821951","SRR7821952","SRR7821953","SRR7821968","SRR7821969","SRR7821970")
 
 # The first line is command information, so skip it
-data <- read.table("C:\\Users\\11951\\Desktop\\tox\\matrix.txt", header=TRUE, quote="\t", skip=1)
+data <- read.table("E:\\tox\\matrix.txt", header=TRUE, quote="\t", skip=1)
 # We want the count, so we start with the 7th column, here we need blood data, so start with 15th.
 names(data)[15:22] <- sampleNames
 countData <- as.matrix(data[15:22])
@@ -24,6 +24,8 @@ dds <- dds[ rowSums(counts(dds)) > 1, ]
 
 ## The DESeq function was used to estimate the dispersion, and then the res objects were obtained by difference analysis.
 dds <- DESeq(dds)
+rld <- rlog(dds, blind=TRUE)
+DESeq2::plotPCA(rld, intgroup = "condition")
 res <- results(dds)
 write.csv(res, "res_des_output_Blood.csv")
 resdata <- merge(as.data.frame(res), as.data.frame(counts(dds, normalized=TRUE)),by="row.names",sort=FALSE)
@@ -32,9 +34,9 @@ write.csv(resdata, "all_des_output_Blood.csv", row.names=FALSE)
 # res format conversion: Use data.frame to convert to table form
 res1 <- data.frame(res, stringsAsFactors = FALSE, check.names = FALSE)
 # Sort by p-value log2FoldChange
-res1 <- res1[order(res1$pvalue, res1$log2FoldChange, decreasing = c(FALSE, TRUE)), ]
-res1_up<- res1[which(res1$log2FoldChange >= 1 & res1$pvalue < 0.05),]      #  Gene with a significant increase in expression
-res1_down<- res1[which(res1$log2FoldChange <= -1 & res1$pvalue < 0.05),]    # Genes with significantly reduced expression
+res1 <- res1[order(res1$padj, res1$log2FoldChange, decreasing = c(FALSE, TRUE)), ]
+res1_up<- res1[which(res1$log2FoldChange >= 1 & res1$padj < 0.05),]      #  Gene with a significant increase in expression
+res1_down<- res1[which(res1$log2FoldChange <= -1 & res1$padj < 0.05),]    # Genes with significantly reduced expression
 res1_total <- rbind(res1_up,res1_down)
 df <- countData[intersect(rownames(countData),rownames(res1_total)),] 
 df2<- as.matrix(df)                                                 
