@@ -90,19 +90,12 @@ geneList <- sort(geneList, decreasing = TRUE)
 ls=as.vector(names(geneList))
 ego<-gseGO(geneList = geneList,keyType = "ENSEMBL",OrgDb = org.Mm.eg.db,ont="CC",minGSSize = 100,maxGSSize = 500,verbose = FALSE)
 eg <- bitr(ls, fromType="ENSEMBL",toType=c("UNIPROT","GENENAME"),OrgDb="org.Mm.eg.db")
-##
 
-
-em2 <- GSEA(geneList, TERM2GENE = C5)
-
-## visualise GSEA DOTPLOT
-dot1 <- dotplot(em2, showCategory=15, split=".sign", font.size=8, size = NULL, label_format = 90) + 
-  ggtitle("Hallmarks:TME - MSI vs MSS") +
-  facet_grid(~.sign)
-dot1 + 
-  theme(plot.title.position = "plot")
 #barplot(ego,showCategory=10)
 #dotplot(ego,split=".sign",showCategory=15)
 #plotGOgraph(ego)
 #goplot(ego)
 #cnetplot(ego,showCategroy=5)
+
+
+
