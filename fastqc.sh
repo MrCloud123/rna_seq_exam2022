@@ -13,6 +13,8 @@ ln -s /data/courses/rnaseq/toxoplasma_de/reads/*.fastq.gz .
 fastqc -t 10 /data/courses/rnaseq_course/toxoplasma_de/reads/*.fastq.gz -o /home/jyun/RNA-seq/out
 #execute the script (sbatch fastqc.sh)
 
+#trimmimg with trimmomatic to remove bad quality reads
+#module add UHTS/Analysis/trimmomatic/0.36;
 #After the executing, run the following code in the shell
 #srun  --mem=20G --cpus-per-task=2 --time=01:00:00 --pty bash
 #multiqc .
